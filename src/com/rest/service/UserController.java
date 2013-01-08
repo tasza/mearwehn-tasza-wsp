@@ -18,7 +18,7 @@ public class UserController
 	@POST
 	@Path("/addUser")
 	@Produces({ MediaType.TEXT_PLAIN })
-	public Response addUser(@Context SecurityContext sc, @FormParam("username") String username, @FormParam("password") String password) 
+	public Response addUser(@FormParam("username") String username, @FormParam("password") String password) 
 	{
 		boolean response = UserManagement.addUser(username, password); 
 		return Response.status(200).entity(Boolean.toString(response)).build();

@@ -23,6 +23,7 @@ public class TagManagement
         }
 	catch (Exception e)
 	{
+		System.out.println(e);
             return false; 
 	}
 	return true;
@@ -36,6 +37,7 @@ public class TagManagement
         }
 	catch (Exception e)
 	{
+		System.out.println(e);
             return false; 
 	}
 	return true;
