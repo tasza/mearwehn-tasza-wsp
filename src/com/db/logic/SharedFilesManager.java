@@ -96,11 +96,32 @@ public class SharedFilesManager
             PreparedStatement ps = con.prepareStatement("SELECT * FROM sharedFiles WHERE id = ?");
             ps.setInt(1, ID);
             ResultSet rs = ps.executeQuery();
-            con.close();
+            SharedFiles sf = null; 
             if(rs.next())
-                return new SharedFiles(rs.getInt("id"), rs.getInt("file"), rs.getInt("user")); 
+                sf =  new SharedFiles(rs.getInt("id"), rs.getInt("file"), rs.getInt("user")); 
+            con.close();
+            return sf; 
         } catch (Exception ex) {}
         return null; 
+    }
+    
+    public static int getSharedFileID(int file, int user)
+    {
+        try 
+        {
+        	Class.forName(driverName);
+        	Connection con = (Connection) DriverManager.getConnection(url, uid, pwd);
+            PreparedStatement ps = con.prepareStatement("SELECT id FROM sharedFiles WHERE file = ? AND user = ?");
+            ps.setInt(1, file);
+            ps.setInt(2, user);
+            ResultSet rs = ps.executeQuery();
+            int id = -1; 
+            if(rs.next())
+                id = rs.getInt("id"); 
+            con.close();
+            return id; 
+        } catch (Exception ex) {}
+        return -1; 
     }
     
     public static List<SharedFiles> getAllSharedFiles()
@@ -111,10 +132,10 @@ public class SharedFilesManager
         	Connection con = (Connection) DriverManager.getConnection(url, uid, pwd);
             PreparedStatement ps = con.prepareStatement("SELECT * FROM sharedFiles");
             ResultSet rs = ps.executeQuery();
-            con.close();
             List<SharedFiles> sharedFiles = new ArrayList<SharedFiles>(); 
             while(rs.next())
                 sharedFiles.add(new SharedFiles(rs.getInt("id"), rs.getInt("file"), rs.getInt("user"))); 
+            con.close();
             return sharedFiles; 
         } catch (Exception ex) {}
         return null; 

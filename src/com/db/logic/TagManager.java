@@ -96,10 +96,12 @@ public class TagManager
             PreparedStatement ps = con.prepareStatement("SELECT id FROM tags WHERE tag = ?");
             ps.setString(1, tag);
             ResultSet rs = ps.executeQuery();
-            con.close();
+            int result = -1; 
             if(rs.next())
-                return rs.getInt("id"); 
-        } catch (Exception ex) {}
+                result = rs.getInt("id"); 
+            con.close();
+            return result; 
+        } catch (Exception ex) { System.out.println(ex); }
         return -1; 
     }
     

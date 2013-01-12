@@ -29,15 +29,15 @@ public class TagedFilesManager
         {
         	Class.forName(driverName);
         	Connection con = (Connection) DriverManager.getConnection(url, uid, pwd);
-            PreparedStatement ps = con.prepareStatement("INSERT INTO tagedFiles(file, user) VALUES(?,?)");
-            ps.setInt(2, tag);
-            ps.setInt(1, file); 
+            PreparedStatement ps = con.prepareStatement("INSERT INTO tagedFiles(tag, file) VALUES(?,?)");
+            ps.setInt(1, tag);
+            ps.setInt(2, file); 
             int statement = ps.executeUpdate(); 
             con.close();
             if (statement != 0) 
                 return true; 
         } 
-        catch (Exception ex) {}
+        catch (Exception ex) {System.out.println(ex); }
         return false;
     }
     
@@ -112,11 +112,32 @@ public class TagedFilesManager
             PreparedStatement ps = con.prepareStatement("SELECT * FROM tagedFiles WHERE id = ?");
             ps.setInt(1, ID);
             ResultSet rs = ps.executeQuery();
-            con.close();
+            TagedFiles tf = null; 
             if(rs.next())
-                return new TagedFiles(rs.getInt("id"), rs.getInt("tag"), rs.getInt("file")); 
+                tf =  new TagedFiles(rs.getInt("id"), rs.getInt("tag"), rs.getInt("file")); 
+            con.close();
+            return tf; 
         } catch (Exception ex) {}
         return null; 
+    }
+    
+    public static int getTagedFileID(int file, int tag)
+    {
+        try 
+        {
+        	Class.forName(driverName);
+        	Connection con = (Connection) DriverManager.getConnection(url, uid, pwd);
+            PreparedStatement ps = con.prepareStatement("SELECT id FROM tagedFiles WHERE file = ? AND tag = ?");
+            ps.setInt(1, file);
+            ps.setInt(2, tag);
+            ResultSet rs = ps.executeQuery();
+            int id = -1; 
+            if(rs.next())
+                id = rs.getInt("id"); 
+            con.close();
+            return id; 
+        } catch (Exception ex) {}
+        return -1; 
     }
     
     public static List<TagedFiles> getAllTagedFiles()
@@ -127,10 +148,10 @@ public class TagedFilesManager
         	Connection con = (Connection) DriverManager.getConnection(url, uid, pwd);
             PreparedStatement ps = con.prepareStatement("SELECT * FROM tagedFiles");
             ResultSet rs = ps.executeQuery();
-            con.close();
             List<TagedFiles> tagedFiles = new ArrayList<TagedFiles>(); 
             while(rs.next())
                 tagedFiles.add(new TagedFiles(rs.getInt("id"), rs.getInt("tag"), rs.getInt("file"))); 
+            con.close();
             return tagedFiles; 
         } catch (Exception ex) {}
         return null; 

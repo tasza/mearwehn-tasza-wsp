@@ -18,7 +18,6 @@ public class SpaceController
 	@Produces({ MediaType.TEXT_PLAIN })
 	public Response getAvailableSpace(@Context SecurityContext sc) 
 	{
-		long availableSpace = UserManagement.getAvailableSpace(sc.getUserPrincipal().getName()); 
-		return Response.status(200).entity(availableSpace).build();
+		return Response.status(200).entity(Long.toString(UserManagement.getAvailableSpace(sc.getUserPrincipal().getName()))).build();
 	}
 }

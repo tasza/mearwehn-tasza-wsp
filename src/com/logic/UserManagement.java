@@ -18,7 +18,7 @@ public class UserManagement
 {
     public static long getAvailableSpace(String username) 
     {
-	return UserManager.getAvailableSpace(UserManager.getUserID(username));
+    	return UserManager.getAvailableSpace(UserManager.getUserID(username));
     }
     
     public static boolean addUser(String username, String password) 

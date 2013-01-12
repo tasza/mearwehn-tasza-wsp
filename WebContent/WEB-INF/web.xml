@@ -59,13 +59,19 @@ Inc.//DTD Web Application 2.3//EN"
       	<web-resource-collection>
         	<web-resource-name>Guest Roles Security</web-resource-name>
         	<url-pattern>/rest/spaceController/*</url-pattern>
-        	<http-method>POST</http-method>
+        	<http-method>GET</http-method>
       	</web-resource-collection>
       	
       	<web-resource-collection>
         	<web-resource-name>Guest Roles Security</web-resource-name>
         	<url-pattern>/rest/fileSearchController/*</url-pattern>
         	<http-method>POST</http-method>
+      	</web-resource-collection>
+      	
+      	<web-resource-collection>
+        	<web-resource-name>Guest Roles Security</web-resource-name>
+        	<url-pattern>/rest/fileSearchController/*</url-pattern>
+        	<http-method>GET</http-method>
       	</web-resource-collection>
 
       	<auth-constraint>
