@@ -70,10 +70,12 @@ public class UserManager
             PreparedStatement ps = con.prepareStatement("SELECT id FROM users WHERE name = ?");
             ps.setString(1, name);
             ResultSet rs = ps.executeQuery();
-            con.close();
+            int result = -1; ; 
             if(rs.next())
-                return rs.getInt("id"); 
-        } catch (Exception ex) {}
+                result =  rs.getInt("id"); 
+            con.close();
+            return result; 
+        } catch (Exception ex) {System.out.println(ex); }
         return -1;
     }
     
@@ -86,13 +88,31 @@ public class UserManager
             PreparedStatement ps = con.prepareStatement("SELECT availableStorageSpace FROM users WHERE id = ?");
             ps.setInt(1, ID);
             ResultSet rs = ps.executeQuery();
-            con.close();
+            int result = -1; ; 
             if(rs.next())
-                return rs.getInt("availableStorageSpace"); 
+                result = rs.getInt("availableStorageSpace"); 
+            con.close();
+            return result; 
         } catch (Exception ex) {}
         return -1;
     }
     
+    public static boolean updateAvailableSpace(int user, long availableSpace)
+    {
+        try 
+        {
+        	Class.forName(driverName);
+        	Connection con = (Connection) DriverManager.getConnection(url, uid, pwd);
+            PreparedStatement ps = con.prepareStatement("UPDATE users SET availableStorageSpace = ? WHERE id = ?");
+            ps.setLong(1, availableSpace);
+            ps.setInt(2, user);
+            int statement = ps.executeUpdate(); 
+            con.close();
+            if (statement != 0) 
+                return true; 
+        } catch (Exception ex) {System.out.println(ex); }
+        return false; 
+    }
     public static Users getUserByID(int ID)
     {
         try 
@@ -102,9 +122,11 @@ public class UserManager
             PreparedStatement ps = con.prepareStatement("SELECT * FROM users WHERE id = ?");
             ps.setInt(1, ID);
             ResultSet rs = ps.executeQuery();
-            con.close();
+            Users user = null; 
             if(rs.next())
-                return new Users(rs.getInt("id"), rs.getString("name"), rs.getString("password"), rs.getLong("availableStorageSpace")); 
+                user =  new Users(rs.getInt("id"), rs.getString("name"), rs.getString("password"), rs.getLong("availableStorageSpace")); 
+            con.close();
+            return user; 
         } catch (Exception ex) {}
         return null; 
     }
@@ -117,10 +139,10 @@ public class UserManager
         	Connection con = (Connection) DriverManager.getConnection(url, uid, pwd);
             PreparedStatement ps = con.prepareStatement("SELECT * FROM users");
             ResultSet rs = ps.executeQuery();
-            con.close();
             List<Users> users = new ArrayList<Users>(); 
             while(rs.next())
                 users.add(new Users(rs.getInt("id"), rs.getString("name"), rs.getString("password"), rs.getLong("availableStorageSpace"))); 
+            con.close();
             return users; 
         } catch (Exception ex) {}
         return null; 
